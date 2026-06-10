@@ -1,14 +1,25 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'db_helper.dart';
+import 'platform_stub.dart' if (dart.library.io) 'platform_io.dart';
+import 'sqflite_ffi_helper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+
+  if (kIsWeb) {
+    debugPrint('Running on Web');
+  } else if (defaultTargetPlatform == TargetPlatform.android) {
+    debugPrint('Pengguna menggunakan Android');
+  } else if (defaultTargetPlatform == TargetPlatform.windows) {
+    debugPrint('Pengguna menggunakan Windows');
+  }
+
+  if (isDesktopPlatform) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+
   runApp(const MyApp());
 }
 
